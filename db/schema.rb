@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180818173449) do
+ActiveRecord::Schema.define(version: 20180919211201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 20180818173449) do
     t.text "seller_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_amazons_on_store_id", unique: true
   end
 
   create_table "orders", force: :cascade do |t|
@@ -36,6 +37,7 @@ ActiveRecord::Schema.define(version: 20180818173449) do
     t.string "sent_to_amazon", default: "false"
     t.string "amazon_order_id"
     t.boolean "fulfillable"
+    t.index ["bc_order_id"], name: "index_orders_on_bc_order_id", unique: true
   end
 
   create_table "speeds", force: :cascade do |t|
@@ -51,6 +53,7 @@ ActiveRecord::Schema.define(version: 20180818173449) do
     t.datetime "updated_at", null: false
     t.integer "store_id"
     t.boolean "enabled", default: false
+    t.index ["store_id", "shipping_speed"], name: "index_speeds_on_store_id_and_shipping_speed", unique: true
   end
 
   create_table "stores", force: :cascade do |t|
