@@ -1,0 +1,26 @@
+default: &default
+  adapter: postgresql
+  pool: 100
+  timeout: 5000
+  host: 127.0.0.1
+
+development:
+  <<: *default
+  username: <%= ENV['database_username'] %>
+  password: <%= ENV['database_password'] %>
+  database: bc_ship_dev
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: bc_ship_test
+
+production:
+  <<: *default
+  host: <%= ENV['database_host'] %>
+  port: <%= ENV['database_port'] %>
+  username: <%= ENV['database_username'] %>
+  password: <%= ENV['database_password'] %>
+  database: bc_ship_prod

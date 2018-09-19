@@ -1,0 +1,17 @@
+I gotta deliver by September 1.
+
+Today is June 28. Which gives me: 
+
+Now today is July 13 and I have amazon rates, and BC response setup! And about half of the logic to adjust rates
+2 weeks in July
+4 weeks in August
+4 weeks in September
+
+12 weeks total
+
+To do
+:: how to parse orders and order updates
+
+
+
+

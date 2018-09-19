@@ -1,0 +1,44 @@
+bunch of shit.. if you don't do the --save at the end it doesn't work..
+
+make sure to comment this out in application.rb in the config folder.
+config.active_record.raise_in_transactional_callbacks = true #comment that shit out
+
+THIS IS HOW YOU START WEBPACK!!!
+./bin/webpack-dev-server
+
+you have to import vue like this!!!!!!!!!!!!!!!!!!!!!!!!
+import Vue from 'vue/dist/vue.esm';
+
+I gotta initialize yarn first.. with yarn init
+
+vue-loader
+npm install -g @vue/cli
+
+don't forget to install vue
+npm install vue
+
+and / or
+bundle exec rails webpacker:install:vue
+
+npm install --save axios whoops, did this twice..
+
+and you'll need to install yarn
+
+vue router
+npm install --save vue-router
+
+for validation
+npm install vuelidate --save
+
+for copying to clipboard
+npm install --save v-clipboard
+
+for vuetify
+npm install vuetify --save
+
+for countries
+npm i country-list --save
+https://www.npmjs.com/package/country-list?activeTab=readme for countries
+
+vue template compiler
+yarn add vue-template-compiler --save
