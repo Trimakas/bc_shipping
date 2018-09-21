@@ -30,9 +30,9 @@ ENV LD_PRELOAD "/usr/lib/x86_64-linux-gnu/libjemalloc.so.1"
 RUN node -v
 RUN npm -v
 
-# RUN npm install -g yarn
-# RUN bundle install --jobs 20 --retry 5 --without development test
-# RUN yarn install
+RUN npm install -g yarn
+RUN bundle install --jobs 20 --retry 5 --without development test
+RUN yarn install
 
 RUN apt purge -y curl wget \
     && apt-get -y autoclean \
