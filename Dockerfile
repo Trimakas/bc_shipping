@@ -47,6 +47,3 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 
 EXPOSE 9494
-
-#CMD bundle exec puma -C config/puma/aws-production.rb
-#CMD bundle exec sidekiq -C config/sidekiq/aws-production.yml
