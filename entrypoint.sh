@@ -3,12 +3,12 @@ set -e
 
 ARG="$(awk '{print $1}' <<< $1)"
 
-npm install -g yarn
 bundle install --jobs 20 --retry 5 --without development test
-yarn install
 
 if [[ "$ARG" == "puma" ]]; then
   echo "Starting puma..."
+  npm install -g yarn
+  yarn install
   /usr/sbin/service cron start
   /usr/local/bin/bundle exec rake assets:precompile --trace
   /usr/local/bin/bundle exec rake db:migrate --trace
