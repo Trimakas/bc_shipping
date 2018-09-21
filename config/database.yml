@@ -23,4 +23,4 @@ production:
   port: <%= ENV['database_port'] %>
   username: <%= ENV['database_username'] %>
   password: <%= ENV['database_password'] %>
-  database: bc_ship_prod
+  database: <%= ENV['database_name'] %>
