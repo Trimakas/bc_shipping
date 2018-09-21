@@ -17,5 +17,5 @@ elif [[ "$ARG" == "sidekiq" ]]; then
   echo "Starting sidekiq..."
 fi
 
-cd /bytestand
+cd /app
 exec "/usr/local/bin/bundle" "exec" "$@"

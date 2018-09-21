@@ -5,6 +5,7 @@ ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION 6.11.2
 
 RUN mkdir -p /$APP /var/log/$APP /var/$APP/
+RUN ln -sf /$APP /app
 ADD . /$APP
 WORKDIR /$APP
 
