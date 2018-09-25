@@ -53,9 +53,10 @@ RUN apt purge -y curl wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY entrypoint.sh /usr/local/bin/
+COPY entrypoint.sh entrypoint-console.sh /usr/local/bin/
 RUN ln -s usr/local/bin/entrypoint.sh /
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN ln -s usr/local/bin/entrypoint-console.sh /
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/entrypoint-console.sh
 ENTRYPOINT ["entrypoint.sh"]
 
 EXPOSE 9494
