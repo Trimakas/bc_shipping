@@ -59,6 +59,6 @@ RUN ln -s usr/local/bin/entrypoint-console.sh /
 RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/entrypoint-console.sh
 ENTRYPOINT ["entrypoint.sh"]
 
-EXPOSE 9494
+EXPOSE 9494 9422
 
 # pipeline test 1
