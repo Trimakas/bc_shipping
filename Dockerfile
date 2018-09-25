@@ -14,7 +14,19 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 # Update the repository sources list and install dependencies
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libjemalloc1 cron
+    && apt-get install -y --no-install-recommends libjemalloc1 cron openssh-server
+
+#
+# OpenSSH
+#
+
+RUN mkdir /var/run/sshd
+
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
 # Install and configure nodejs
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
