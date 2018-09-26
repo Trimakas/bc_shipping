@@ -700,6 +700,7 @@ GEM
       slop (~> 3.0)
     pry-theme (1.2.0)
       coderay (~> 1.1)
+    puma (3.12.0)
     rack (2.0.5)
     rack-proxy (0.6.4)
       rack
@@ -801,6 +802,7 @@ DEPENDENCIES
   pry
   pry-remote
   pry-theme
+  puma
   rails (= 5.1.4)
   railties (~> 5.1.4)
   sass-rails (~> 5.0)
