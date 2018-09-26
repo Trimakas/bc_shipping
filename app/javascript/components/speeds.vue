@@ -107,6 +107,8 @@ import expedited_speed from '../components/expedited_speed.vue';
 import {dataShare} from '../packs/application.js';
 import axios from 'axios';
 
+var url = "https://bc-shipping.bytestand.com";
+
 export default {
   data: function() {
     return {
@@ -122,9 +124,9 @@ export default {
   },
   created() {
     dataShare.$emit('speed', this.speed);
-    // axios.get('https://bc-ship-trimakas.c9users.io/number_of_speeds_to_return').then(response => {
-    //   this.showThreeSpeeds = response.data.three_speed;
-    // });
+    axios.get(url + '/number_of_speeds_to_return').then(response => {
+      this.showThreeSpeeds = response.data.three_speed;
+    });
   },
   methods: {
     goToFAQ() {

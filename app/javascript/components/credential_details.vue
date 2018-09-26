@@ -109,6 +109,8 @@ import {dataShare} from '../packs/application.js';
 import axios from 'axios';
 import { required } from 'vuelidate/lib/validators';
 
+var url = "https://bc-shipping.bytestand.com";
+
 export default {
   validations: {
       seller_id: { required },
@@ -147,7 +149,7 @@ export default {
   },
   created() {
     let self = this;
-    axios.get('https://bc-ship-trimakas.c9users.io/return_zone_info').then(response => {
+    axios.get(url + '/return_zone_info').then(response => {
       response.data.forEach(function(zone) {
         if(zone.selected){
           var zone_selected_hash = {text: zone.zone_name, value: zone.bc_zone_id};
@@ -157,7 +159,7 @@ export default {
         self.zones.push(zone_hash);
       });
     });
-    axios.get('https://bc-ship-trimakas.c9users.io/return_amazon_credentials').then(response => {
+    axios.get(url + '/return_amazon_credentials').then(response => {
       this.seller_id = response.data.seller_id;
       if(this.seller_id == ""){
         this.show_cancel_button = false;
@@ -182,6 +184,7 @@ export default {
     },
     tokenErrors() {
       const errors = []
+      debugger;
       if (!this.$v.token.$dirty) return errors
       !this.$v.token.required && errors.push('Please enter your Amazon Auth Token')
       return errors      
@@ -189,7 +192,7 @@ export default {
     zoneErrors() {
       const errors = []
       if (!this.$v.selected_zones.$dirty) return errors
-      !this.$v.selected_zones.required && errors.push('Please choose atleast one shipping zone to add this rate too')
+      !this.$v.selected_zones.required && errors.push('Please choose at least one shipping zone to add this rate too')
       return errors      
     },      
   },
@@ -220,7 +223,7 @@ export default {
         auth_token: this.token,
       };
       let self = this;
-      axios.post('https://bc-ship-trimakas.c9users.io/amazon_credentials_check', AmazonCreds).then(response => {
+      axios.post(url + '/amazon_credentials_check', AmazonCreds).then(response => {
         var creds_status = response.data.are_the_amazon_creds_good;
         if(creds_status == true){
           dataShare.$emit('whereToGo', "speeds");
@@ -236,7 +239,7 @@ export default {
         const SelectedZones = {
           zone_info: this.selected_zones
         };
-        axios.post('https://bc-ship-trimakas.c9users.io/receive_zone_info', SelectedZones); 
+        axios.post(url + '/receive_zone_info', SelectedZones); 
     }
   }
 };  

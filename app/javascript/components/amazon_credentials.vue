@@ -20,6 +20,8 @@ import credential_instructions from '../components/credential_instructions.vue';
 import credential_details from '../components/credential_details.vue';
 import axios from 'axios';
 
+var url = "https://bc-shipping.bytestand.com";
+
 export default {
   data: function() {
     return {
@@ -40,7 +42,7 @@ export default {
   },
   methods: {
     sendToBilling() {
-      axios.post('https://new-ship-trimakas.c9users.io/create_billing_plan').then(response => {
+      axios.post(url + '/create_billing_plan').then(response => {
         console.log(response.data);
         top.location.href = response.data.url_redirect;
       });

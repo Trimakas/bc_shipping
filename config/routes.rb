@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'welcome#index'
   post '/', to: 'welcome#index'
-  post 'amazon_creds', to: 'welcome#amazon_creds'
+  post 'rates', to: 'rate#rates'
   get 'where_to_send_user' => 'welcome#where_to_send_user'
   
   post 'orders_update', to: 'order#receive_order_update'  

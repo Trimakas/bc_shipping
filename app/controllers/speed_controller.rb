@@ -47,6 +47,7 @@ class SpeedController < ApplicationController
     current_speed = current_store.speeds.where(store_id: current_store.id, shipping_speed: shipping_speed)
     if current_speed.empty?
       current_store.speeds.create(
+        store_id: current_store.id,
         shipping_speed: shipping_speed,
         enabled: enabled,
         flex: flex,

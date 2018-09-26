@@ -178,6 +178,8 @@
 import {dataShare} from '../packs/application.js';
 import axios from 'axios';
 
+var url = "https://bc-shipping.bytestand.com";
+
 export default {
   data: function() {
     return {
@@ -213,7 +215,7 @@ export default {
     dataShare.$on('success_sheet', (success_sheet) => {
       this.success_sheet = success_sheet;
     });
-    axios.get('https://bc-ship-trimakas.c9users.io/return_speed_info', {params: {speed: this.speed}}).then(response => {
+    axios.get(url + '/return_speed_info', {params: {speed: this.speed}}).then(response => {
       if(response.data.shipping_speed == "Standard" && response.data.enabled == true){
         this.standard_speed_enabled = true;
       }
@@ -229,7 +231,7 @@ export default {
       this.standard_free_shipping_amount = response.data.free_shipping_amount;
       this.enableAndDisable();
     });
-    axios.get('https://bc-ship-trimakas.c9users.io/return_currency_info').then(response => {
+    axios.get(url + '/return_currency_info').then(response => {
       this.standard_currency_symbol = response.data.currency_symbol;
       this.standard_fee_type = [this.standard_currency_symbol, "%"];
     });
@@ -333,7 +335,7 @@ export default {
         };
         let self = this;
         let speed_info = {bytestand_rate_info: shipping};
-        axios.post('https://bc-ship-trimakas.c9users.io/save_shipping_info', speed_info).then(response => {
+        axios.post(url + '/save_shipping_info', speed_info).then(response => {
           console.log(this.response);
         });
       },
@@ -352,7 +354,7 @@ export default {
         };
         let self = this;
         let delete_speed = {bytestand_rate_info: deleteSpeed};
-        axios.post('https://bc-ship-trimakas.c9users.io/delete_speed', delete_speed).then(response => {
+        axios.post(url + '/delete_speed', delete_speed).then(response => {
           console.log(this.response);
         });       
       }

@@ -178,6 +178,8 @@
 import {dataShare} from '../packs/application.js';
 import axios from 'axios';
 
+var url = "https://bc-shipping.bytestand.com";
+
 export default {
   data: function() {
     return {
@@ -207,7 +209,7 @@ export default {
     };
   },
   created() {
-    axios.get('https://bc-ship-trimakas.c9users.io/return_speed_info', {params: {speed: this.speed}}).then(response => {
+    axios.get(url + '/return_speed_info', {params: {speed: this.speed}}).then(response => {
       if(response.data.shipping_speed == "Priority" && response.data.enabled == true){
         this.priority_speed_enabled = true;
       }
@@ -323,7 +325,7 @@ export default {
         };
         let self = this;
         let speed_info = {bytestand_rate_info: shipping};
-        axios.post('https://bc-ship-trimakas.c9users.io/save_shipping_info', speed_info).then(response => {
+        axios.post(url + '/save_shipping_info', speed_info).then(response => {
           console.log(this.response);
         });
       },
@@ -342,7 +344,7 @@ export default {
         };
         let self = this;
         let delete_speed = {bytestand_rate_info: deleteSpeed};
-        axios.post('https://bc-ship-trimakas.c9users.io/delete_speed', delete_speed).then(response => {
+        axios.post(url + '/delete_speed', delete_speed).then(response => {
           console.log(this.response);
         });       
       }
