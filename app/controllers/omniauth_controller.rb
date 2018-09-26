@@ -26,6 +26,7 @@ class OmniauthController < ApplicationController
   
   #load runs when opening the app
   def load
+    Rails.logger.debug "\n This is the root path #{root_path} and the root URL #{root_url} \n"
     set_bc_session_during_load
     get_store_currency_info(loaded_store.bc_hash, loaded_store.token)
     redirect_to root_path
