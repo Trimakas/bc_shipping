@@ -2,7 +2,6 @@ app_path = File.expand_path('../../../', __FILE__)
 environment "production"
 pidfile "/tmp/puma.pid"
 state_path "/tmp/puma.state"
-stdout_redirect "/var/log/puma.log"
 
 # Feel free to experiment with this, 0/16 is a good starting point.
 threads_count = Integer(ENV['MAX_THREADS'] || 8)
