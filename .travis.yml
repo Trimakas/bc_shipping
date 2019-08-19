@@ -1,0 +1,7 @@
+language: ruby
+dist: xenial
+rvm:
+  - rbx-3
+before_install: 
+  - echo testbuild
+  - echo testbuild success
