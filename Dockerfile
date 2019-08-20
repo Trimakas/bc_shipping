@@ -53,12 +53,7 @@ RUN apt purge -y curl wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY entrypoint.sh entrypoint-console.sh /usr/local/bin/
-RUN ln -s usr/local/bin/entrypoint.sh /
-RUN ln -s usr/local/bin/entrypoint-console.sh /
-RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/entrypoint-console.sh
-ENTRYPOINT ["entrypoint.sh"]
+RUN REDIS_URL="redis://localhost:6379" DATABASE_URL="postgres://127.0.0.1:5432" NODE_ENV=production RAILS_ENV=production bundle exec rails assets:precompile
 
-EXPOSE 9494 9422
-
+CMD ["/bin/bash"]
 # pipeline test 1

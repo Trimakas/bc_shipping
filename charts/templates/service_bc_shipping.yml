@@ -1,0 +1,58 @@
+{{- $chartName := .Chart.Name -}}
+{{- $chartVersion := .Chart.Version | replace "+" "_" -}}
+{{- $chartFullName := printf "%s-%s" $chartName $chartVersion | replace "+" "_" -}}
+{{- $releaseName := .Release.Name -}}
+{{- $serviceFullName := printf "%s-%s" .Values.serviceName .Release.Name -}}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $serviceFullName }}
+  labels:
+    app.kubernetes.io/instance: {{ $releaseName }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ .Values.appName }}
+    helm.sh/chart: {{ $chartFullName }}
+spec:
+  type: {{ default "ClusterIP" .Values.serviceType }}
+  ports:
+  - port: {{ .Values.puma.containerPort1 | default 9494 }}
+    targetPort: {{ .Values.puma.containerPort1 | default 9494 }}
+    protocol: TCP
+    name: puma1
+  - port: {{ .Values.puma.containerPort2 | default 9422 }}
+    targetPort: {{ .Values.puma.containerPort2 | default 9422 }}
+    protocol: TCP
+    name: puma2
+  selector:
+    app.kubernetes.io/component: bc-shipping-frontend
+---
+{{- with .Values.nginxIngress }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "{{ .name }}-{{ $releaseName }}"
+  namespace: {{ .namespace | default "default" }}
+  annotations: 
+      kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  {{- /* Range over all rules in values */ -}}
+  {{- range .rules }}
+  - host: {{ .host }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ $serviceFullName }}
+          servicePort: {{ .servicePort | default 9494 }}
+        path: {{ .path }}
+  {{- end }}
+  {{- if .tls }}
+  tls:
+  - hosts:
+  {{- range .tls.hosts }}
+    - {{ . | quote }}
+  {{- end }}
+    secretName: {{ .tls.secretName }}
+  {{- end }}
+{{- end }}

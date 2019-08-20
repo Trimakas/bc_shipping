@@ -1,0 +1,34 @@
+appName: bc_shipping
+
+imageRepo: gcr.io/copper-mender-240813/bc_shipping
+imageTag: staging-latest
+imagePullPolicy: Always
+
+serviceName: cluster-ip
+serviceType: ClusterIP
+servicePort: 9494
+
+configMapName: bc-shipping
+
+puma:
+  name: shipping
+  replicaCount: 1
+  containerPort1: 9494
+  containerPort2: 9422
+  command: bundle exec puma -C config/puma/aws-production.rb
+  resources:
+    memoryRequest: 120Mi
+    memoryLimit: 200Mi
+    cpuRequest: 50m
+    cpuLimit: 150m
+
+nginxIngress:
+  name: ingress-nginx
+  rules:
+    - host: bc-shipping.k8s.bytestand.com
+      servicePort: 9494
+      path: /
+  # tls:
+  #   hosts:
+  #     -
+  #   secretName:
