@@ -3,7 +3,7 @@ set -e
 
 ARG="$(awk '{print $1}' <<< $1)"
 
-# bundle install --jobs 20 --retry 5 --without development test
+bundle install --jobs 20 --retry 5 --without development test
 
 if [[ "$ARG" == "puma" ]]; then
   echo "Starting puma..."

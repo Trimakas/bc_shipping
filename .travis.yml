@@ -1,7 +1,51 @@
-language: ruby
+sudo: required
 dist: xenial
-rvm:
-  - rbx-3
-before_install: 
-  - echo testbuild
-  - echo testbuild success
+group: deprecated-2017Q4
+branches:
+  only:
+  - staging
+language: ruby
+cache: bundler
+services:
+  - postgresql
+  - redis-server
+  - docker
+addons:
+  postgresql: "9.6"
+env:
+    global:
+    - PATH=$PATH:$HOME/google-cloud-sdk/bin
+    - PROJECT_ID="copper-mender-240813"
+    - ZONE="us-central1-a"
+    - IMAGE_NAME=bc_shipping
+    - IMAGE_TAG=staging-latest
+    - CACHE_IMAGE_TAG=cache-latest
+    - FULL_IMAGE_NAME=gcr.io/$PROJECT_ID/${IMAGE_NAME}:${IMAGE_TAG}
+    - FULL_CACHE_IMAGE_NAME=gcr.io/$PROJECT_ID/${IMAGE_NAME}:${CACHE_IMAGE_TAG}
+    - GOOGLE_APPLICATION_CREDENTIALS="travis-ci-role.json"
+    - CLUSTER_NAME=staging
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_d85f6adcee97_key -iv $encrypted_d85f6adcee97_iv -in secrets.tar.enc -out secrets.tar -d
+  - tar xvf secrets.tar
+  - echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+  - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 762E3157 && sudo apt-get -qq update && sudo apt-get install -y google-cloud-sdk kubectl
+  - source /home/travis/.bashrc
+  - ./scripts/sdk-configure.sh
+  - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > get_helm.sh
+  - chmod 700 get_helm.sh
+  - ./get_helm.sh
+
+before_script:
+  # - RAILS_ENV=test bundle exec rake db:migrate
+  - yes | gcloud auth configure-docker
+  - docker pull $FULL_CACHE_IMAGE_NAME
+  - docker build --cache-from $FULL_CACHE_IMAGE_NAME -f Dockerfile -t $FULL_IMAGE_NAME --network=host .
+  - docker push $FULL_IMAGE_NAME
+  - yes | gcloud container images add-tag ${FULL_IMAGE_NAME} gcr.io/$PROJECT_ID/${IMAGE_NAME}:${TRAVIS_COMMIT}
+  - yes | gcloud container images add-tag ${FULL_IMAGE_NAME} ${FULL_CACHE_IMAGE_NAME}
+
+script:
+  - gcloud container clusters get-credentials $CLUSTER_NAME
+  - helm upgrade --install bc_shipping-staging --values charts/values.yaml --set imageTag=${TRAVIS_COMMIT} --wait charts/
