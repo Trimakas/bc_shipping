@@ -28,7 +28,8 @@ nginxIngress:
     - host: bc-shipping.k8s.bytestand.com
       servicePort: 9494
       path: /
-  # tls:
-  #   hosts:
-  #     -
-  #   secretName:
+  tls:
+     hosts:
+       - k8s.bytestand.com
+       - '*.k8s.bytestand.com'
+     secretName: bytestand-cert-letsencrypt
