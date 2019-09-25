@@ -8,7 +8,7 @@ kind: Deployment
 metadata:
   name: {{ printf "%s-%s" .Values.puma.name $releaseName }}
   labels:
-    app.kubernetes.io/component: bc-shipping-frontend
+    app.kubernetes.io/component: bc-shipping
     app.kubernetes.io/instance: {{ $releaseName }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ .Values.appName }}
@@ -17,11 +17,11 @@ spec:
   replicas: {{ .Values.puma.replicaCount | default 1}}
   selector:
     matchLabels:
-      app.kubernetes.io/component: bc-shipping-frontend
+      app.kubernetes.io/component: bc-shipping
   template:
     metadata:
       labels:
-        app.kubernetes.io/component: bc-shipping-frontend
+        app.kubernetes.io/component: bc-shipping
         app.kubernetes.io/instance: {{ $releaseName }}
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/name: {{ .Values.appName }}

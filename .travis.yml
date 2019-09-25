@@ -4,6 +4,7 @@ group: deprecated-2017Q4
 branches:
   only:
   - staging
+  - master
 language: ruby
 cache: bundler
 services:
@@ -17,35 +18,24 @@ env:
     - PATH=$PATH:$HOME/google-cloud-sdk/bin
     - PROJECT_ID="copper-mender-240813"
     - ZONE="us-central1-a"
-    - IMAGE_NAME=bc_shipping
-    - IMAGE_TAG=staging-latest
-    - CACHE_IMAGE_TAG=cache-latest
-    - FULL_IMAGE_NAME=gcr.io/$PROJECT_ID/${IMAGE_NAME}:${IMAGE_TAG}
-    - FULL_CACHE_IMAGE_NAME=gcr.io/$PROJECT_ID/${IMAGE_NAME}:${CACHE_IMAGE_TAG}
-    - GOOGLE_APPLICATION_CREDENTIALS="travis-ci-role.json"
-    - CLUSTER_NAME=staging
+    - IMAGE_NAME=bc_shiping
+    - GOOGLE_APPLICATION_CREDENTIALS="${PWD}/scripts/travis-ci-role.json"
 
 before_install:
-  - openssl aes-256-cbc -K $encrypted_d85f6adcee97_key -iv $encrypted_d85f6adcee97_iv -in secrets.tar.enc -out secrets.tar -d
-  - tar xvf secrets.tar
+  - wget -qO - https://api.bintray.com/users/sobolevn/keys/gpg/public.key | sudo apt-key add -
   - echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
   - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 762E3157 && sudo apt-get -qq update && sudo apt-get install -y google-cloud-sdk kubectl
+  - gem update --system
+  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 762E3157
+  - sudo apt-get -qq update
+  - sudo apt-get install -y google-cloud-sdk kubectl
+  - echo "${GCP_SERVICE_ACCOUNT}" | base64 -d > ${GOOGLE_APPLICATION_CREDENTIALS}
   - source /home/travis/.bashrc
-  - ./scripts/sdk-configure.sh
-  - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > get_helm.sh
-  - chmod 700 get_helm.sh
-  - ./get_helm.sh
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > get_helm.sh && chmod 700 get_helm.sh && ./get_helm.sh; fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./scripts/sdk-configure.sh; fi'      
 
-before_script:
-  # - RAILS_ENV=test bundle exec rake db:migrate
-  - yes | gcloud auth configure-docker
-  - docker pull $FULL_CACHE_IMAGE_NAME
-  - docker build --cache-from $FULL_CACHE_IMAGE_NAME -f Dockerfile -t $FULL_IMAGE_NAME --network=host .
-  - docker push $FULL_IMAGE_NAME
-  - yes | gcloud container images add-tag ${FULL_IMAGE_NAME} gcr.io/$PROJECT_ID/${IMAGE_NAME}:${TRAVIS_COMMIT}
-  - yes | gcloud container images add-tag ${FULL_IMAGE_NAME} ${FULL_CACHE_IMAGE_NAME}
+before_script:  
+  - ./scripts/build-docker.sh || travis_terminate 1  
 
-script:
-  - gcloud container clusters get-credentials $CLUSTER_NAME
-  - helm upgrade --install bc-shipping-staging --values charts/values.yaml --set imageTag=${TRAVIS_COMMIT} --wait charts/
+script: 
+  - ./scripts/helm_deploy.sh || travis_terminate 1  

@@ -26,3 +26,5 @@ yarn-debug.log*
 /charts/templates/configmap.yml
 travis-ci-role.json
 secrets.tar.enc
+charts/secrets.yaml
+charts/secrets.prod.yaml

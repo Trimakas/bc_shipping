@@ -10,6 +10,15 @@ servicePort: 9494
 
 configMapName: bc-shipping
 
+schedule:
+    name: bytestand-cronjob
+    command: bundle exec whenever --update-crontab && cron -f
+    replicaCount: 1
+    memoryRequest: 256Mi
+    memoryLimit: 1024Mi
+    cpuRequest: 50m
+    cpuLimit: 150m
+
 puma:
   name: shipping
   replicaCount: 1
@@ -21,118 +30,3 @@ puma:
     memoryLimit: 200Mi
     cpuRequest: 50m
     cpuLimit: 150m
-
-nginxIngress:
-  name: ingress-nginx
-  rules:
-    - host: bc-shipping.k8s.bytestand.com
-      servicePort: 9494
-      path: /
-  tls:
-     hosts:
-       - k8s.bytestand.com
-       - '*.k8s.bytestand.com'
-     secretName: bytestand-cert-letsencrypt
-# jobs:
-#   ## REQUIRED ###
-#   - name: poll-sqs-queue
-#     image:
-#       repository: gcr.io/copper-mender-240813/bc_shipping
-#       tag: staging-latest
-#       imagePullPolicy: IfNotPresent
-#     schedule: "0,10,20,30,40,50 * * * *"
-#     failedJobsHistoryLimit: 1
-#     successfulJobsHistoryLimit: 3
-#     concurrencyPolicy: Forbid
-#     restartPolicy: OnFailure
-#   ## OPTIONAL ###
-#     env:
-#     - name: RAILS_ENV
-#       value: production
-#     command: ["/bin/sh", "-c"]
-#     args:
-#     - |
-#       bundle exec rake poll_sqs_queue --silent
-#     # resources:
-#     #   limits:
-#     #     cpu: <cpu_count>
-#     #     memory: <memory_count>
-#     #   requests:
-#     #     cpu: <cpu_count>
-#     #     memory: <memory_count>
-#     # nodeSelector:
-#     #   key: <value>
-#     # tolerations:
-#     # - effect: NoSchedule
-#     #   operator: Exists
-#     # volumes:
-#     #   - name: config-mount
-#     #     configMap:
-#     #       name: configmap-name
-#     #       items:
-#     #         - key: configuration.yml
-#     #           path: configuration.yml
-#     # volumeMounts:
-#     #   - name: config-mount
-#     #     mountPath: /etc/config
-#     # affinity:
-#     #   nodeAffinity:
-#     #     requiredDuringSchedulingIgnoredDuringExecution:
-#     #       nodeSelectorTerms:
-#     #       - matchExpressions:
-#     #         - key: kubernetes.io/e2e-az-name
-#     #           operator: In
-#     #           values:
-#     #           - e2e-az1
-#     #           - e2e-az2
-#   ## REQUIRED ###
-#   - name: check-amazon-order-status
-#     image:
-#       repository: gcr.io/copper-mender-240813/bc_shipping
-#       tag: staging-latest
-#       imagePullPolicy: IfNotPresent
-#     schedule: "0 0,3,6,9,12,15,18,21 * * *"
-#     failedJobsHistoryLimit: 1
-#     successfulJobsHistoryLimit: 3
-#     concurrencyPolicy: Forbid
-#     restartPolicy: OnFailure
-#   ## OPTIONAL ###
-#     env:
-#     - name: RAILS_ENV
-#       value: production
-#     command: ["/bin/sh", "-c"]
-#     args:
-#     - |
-#       bundle exec rake check_amazon_order_status --silent
-#     # resources:
-#     #   limits:
-#     #     cpu: <cpu_count>
-#     #     memory: <memory_count>
-#     #   requests:
-#     #     cpu: <cpu_count>
-#     #     memory: <memory_count>
-#     # nodeSelector:
-#     #   key: <value>
-#     # tolerations:
-#     # - effect: NoSchedule
-#     #   operator: Exists
-#     # volumes:
-#     #   - name: config-mount
-#     #     configMap:
-#     #       name: configmap-name
-#     #       items:
-#     #         - key: configuration.yml
-#     #           path: configuration.yml
-#     # volumeMounts:
-#     #   - name: config-mount
-#     #     mountPath: /etc/config
-#     # affinity:
-#     #   nodeAffinity:
-#     #     requiredDuringSchedulingIgnoredDuringExecution:
-#     #       nodeSelectorTerms:
-#     #       - matchExpressions:
-#     #         - key: kubernetes.io/e2e-az-name
-#     #           operator: In
-#     #           values:
-#     #           - e2e-az1
-#     #           - e2e-az2
