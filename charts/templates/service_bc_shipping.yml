@@ -25,7 +25,7 @@ spec:
     protocol: TCP
     name: puma2
   selector:
-    app.kubernetes.io/component: bc-shipping-frontend
+    app.kubernetes.io/component: bc-shipping
 ---
 {{- with .Values.nginxIngress }}
 apiVersion: extensions/v1beta1
