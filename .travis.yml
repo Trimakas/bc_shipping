@@ -18,7 +18,7 @@ env:
     - PATH=$PATH:$HOME/google-cloud-sdk/bin
     - PROJECT_ID="copper-mender-240813"
     - ZONE="us-central1-a"
-    - IMAGE_NAME=bc_shiping
+    - IMAGE_NAME=bc_shipping
     - GOOGLE_APPLICATION_CREDENTIALS="${PWD}/scripts/travis-ci-role.json"
 
 before_install:
