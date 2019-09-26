@@ -1,0 +1,39 @@
+{{/* some vars to make life easier */}}
+{{- $chartName := .Chart.Name }}
+{{- $chartVersion := .Chart.Version | replace "+" "_" }}
+{{- $chartFullName := printf "%s-%s" $chartName $chartVersion | replace "+" "_" }}
+{{- $releaseName := .Release.Name -}}
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.job.name }}
+  annotations: 
+    "helm.sh/hook": pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+  labels:
+    app.kubernetes.io/component: bc-shipping-migrate
+    app.kubernetes.io/instance: {{ $releaseName }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ .Values.appName }}
+    helm.sh/chart: {{ $chartFullName }}
+spec:
+  template:
+    metadata:
+      name: {{ .Values.job.name }}}
+    spec:
+      containers:
+      - name: {{ .Values.job.name }}
+        image: "{{ .Values.imageRepo }}:{{ .Values.imageTag }}"
+        tty: true
+        stdin: true
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            {{ .Values.job.command }}
+        envFrom:
+          - configMapRef:
+              name: {{ .Values.configMapName }}
+      restartPolicy: Never
+
+

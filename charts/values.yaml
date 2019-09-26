@@ -10,6 +10,10 @@ servicePort: 9494
 
 configMapName: bc-shipping
 
+job:
+  name: bc-shipping-migratedb
+  command: bundle exec rake db:migrate
+
 schedule:
     name: shipping-cronjob
     command: bundle exec whenever --update-crontab && cron -f
