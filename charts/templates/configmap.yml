@@ -1,0 +1,18 @@
+{{- $chartName := .Chart.Name }}
+{{- $chartVersion := .Chart.Version | replace "+" "_" }}
+{{- $chartFullName := printf "%s-%s" $chartName $chartVersion | replace "+" "_" }}
+{{- $releaseName := .Release.Name }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMapName }}
+  labels:
+    app.kubernetes.io/component: bc-shipping-env-vars
+    app.kubernetes.io/instance: {{ $releaseName }}
+    app.kubernetes.io/name: {{ $.Values.appName }}
+    helm.sh/chart: {{ $chartFullName }}
+data:
+{{- range $key, $value := .Values.secrets }}
+  {{ $key }}: {{ $value | quote }}
+{{- end }}

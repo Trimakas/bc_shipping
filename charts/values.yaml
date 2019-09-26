@@ -11,7 +11,7 @@ servicePort: 9494
 configMapName: bc-shipping
 
 schedule:
-    name: bytestand-cronjob
+    name: shipping-cronjob
     command: bundle exec whenever --update-crontab && cron -f
     replicaCount: 1
     memoryRequest: 256Mi
