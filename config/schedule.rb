@@ -1,4 +1,4 @@
-envs_path = File.expand_path('~/.envs')
+envs_path = File.expand_path('/shipping/.envs')
 if File.exists?(envs_path)
   set :job_template, "/bin/bash -l -c '. #{envs_path} && :job'"
 else
