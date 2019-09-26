@@ -23,7 +23,7 @@ then
     gcloud_auth
     LAST_RELEASE=`helm history bc-shipping-production | tail -1 | awk '{print $1}'`
     gcloud kms decrypt --location=global --keyring=Env_values --key=env-vars --ciphertext-file=charts/secrets.prod.yaml.enc --plaintext-file=charts/secrets.prod.yaml 
-    helm upgrade --install bc-shipping-production --values charts/values.prod.yaml --values charts/secrets.prod.yaml --set imageTag=${TRAVIS_COMMIT} --wait charts/
+    helm upgrade --install bc-shipping-production --values charts/values.yaml --values charts/secrets.prod.yaml --set imageTag=${TRAVIS_COMMIT} --wait charts/
     if [ $? -ne 0 ]; then
         helm rollback bc-shipping-production ${LAST_RELEASE}
         exit 1
