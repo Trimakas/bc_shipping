@@ -26,7 +26,7 @@ puma:
   containerPort2: 9422
   command: bundle exec puma -C config/puma/aws-production.rb
   resources:
-    memoryRequest: 120Mi
-    memoryLimit: 200Mi
+    memoryRequest: 256Mi
+    memoryLimit: 1024Mi
     cpuRequest: 50m
     cpuLimit: 150m
