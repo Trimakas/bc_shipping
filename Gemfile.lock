@@ -700,7 +700,8 @@ GEM
       slop (~> 3.0)
     pry-theme (1.2.0)
       coderay (~> 1.1)
-    puma (3.12.0)
+    puma (4.3.8)
+      nio4r (~> 2.0)
     rack (2.0.5)
     rack-proxy (0.6.4)
       rack
